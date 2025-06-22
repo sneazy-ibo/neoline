@@ -3267,8 +3267,8 @@
       var A = function () {
         var b = 2;
         sa && (b = 1);
-        k.width = 1e3;
-        k.height = 700;
+        k.width = innerWidth;
+        k.height = innerHeight;
         ma = k.width;
         Z = k.height;
         var a = Z * b,
