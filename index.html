@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <base href="https://powerline.coolmathgames.com/">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge">
         <meta charset="utf-8"/>
         <meta name="title" content="powerline.io"/>
@@ -42,7 +43,7 @@
     <body data-feedly-mini="yes">
         <div id="ahya" style="position: absolute; width: 1000px; height: 700px; left: 0; right: 0; top: 0; bottom: 0; background-color: rgba(0,0,0,0.0); z-index: 2;">
             <canvas id="canvas"></canvas>
-            <div class="basic-text" style="position:absolute;left:50%;top:45%;-ms-transform:translate(-50%,-50%);-webkit-transform:translate(-50%,-50%);">
+            <div class="basic-text" style="position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);-ms-transform:translate(-50%,-50%);-webkit-transform:translate(-50%,-50%);">
                 <div hidden class="basic-text nums" id="countdown" style="font-size:80px;opacity: 0;">3</div>
             </div>
             <div id="achievementNotification" style="display:none; position:absolute; left:0; right:0; bottom:60px;">
@@ -488,12 +489,12 @@
                 1 != Va && h("#soundDiv").show();
                 queryString.r && (lb = queryString.r);
                 queryString.d && (N = !0);
-                StrEndsWith = function(a, c) {
-                    return -1 !== a.indexOf(c, a.length - c.length)
-                }
-                ;
-                StrEndsWith(Na, "coolmathgames.com") || "localhost" == Na || (l.location.href = "https://coolmathgames.com");
-                Ta() || (l.location.href = "https://www.coolmathgames.com/0-powerline-io");
+                // StrEndsWith = function(a, c) {
+                //     return -1 !== a.indexOf(c, a.length - c.length)
+                // }
+                // ;
+                // StrEndsWith(Na, "coolmathgames.com") || "localhost" == Na || (l.location.href = "https://coolmathgames.com");
+                // Ta() || (l.location.href = "https://www.coolmathgames.com/0-powerline-io");
                 Date.now || (Date.now = function() {
                     return (new Date).getTime()
                 }
@@ -4350,8 +4351,9 @@
                         zapking: [36E3, 1142.6530612244933]
                     };
                     this.load = function(c) {
+                        const base = 'https://raw.githubusercontent.com/sneazy-ibo/neoline/altair/';
                         this.sound = new Howl({
-                            urls: ["sounds/out.ogg", "sounds/out.m4a", "sounds/out.mp3", "sounds/out.ac3"],
+                            urls: ["sounds/out.ogg", "sounds/out.mp3"].map(u => base + u),
                             sprite: g,
                             onload: function() {
                                 a = !0;
