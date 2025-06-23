@@ -854,6 +854,14 @@
           case 'g':
             l.toggleGraphics();
             break;
+          case 'k':
+            n.leave();
+            break;
+          case 'l':
+            n.sendNick();
+            l.cleartut();
+            overlay.style.display = 'none';
+            break;
         }
         (32 != d.keyCode &&
           38 != d.keyCode &&
@@ -3274,7 +3282,7 @@
         n.hasConnection &&
           (J && clearTimeout(J), (J = setTimeout(n.sendResize, 200)));
       };
-      g.clearSpeedupTutorial = function () {
+      l.cleartut = g.clearSpeedupTutorial = function() {
         v.clear();
       };
       g.initSpeedupTutorial = function () {
