@@ -268,6 +268,7 @@
     s = 1,
     Mb = 0,
     sa = !0,
+    dada = 1,
     Nb = !1,
     pb = 1.2,
     Ob = nb,
@@ -459,6 +460,11 @@
   l.toggleGraphics = function() {
       sa = !sa;
       W.resize();
+  };
+  l.toggleMinimap = function() {
+      dada = !dada;
+      const who = dada === true ? 'you' : 'all';
+      R.showTip('Minimap: ' + who, 2000);
   };
   l.copyRoomLink = function () {
     h("#copyLink").hide();
@@ -853,6 +859,9 @@
             break;
           case 'g':
             l.toggleGraphics();
+            break;
+          case 'h':
+            l.toggleMinimap();
             break;
           case 'k':
             n.leave();
@@ -2556,6 +2565,9 @@
     jd = function () {
       var a,
         c = 0;
+      var margin = 10;
+      var mapSide = 200;
+      var mapBorder = 30;
       this.radiusFromMinimapRadiusPerc = function (a) {
         return (a = (8e3 / ia) * (3 + 8 * a));
       };
@@ -2563,48 +2575,97 @@
         return this.radiusFromMinimapRadiusPerc((a - 1) / 540);
       };
       this.draw = function (g) {
-        var d = ma - 120 * s - 20 * s,
-          k = Z - 120 * s - 20 * s;
+        var d = ma - mapSide * s - margin * s,
+          k = Z - mapSide * s - margin * s;
         g.save();
         var f = s != c;
         c = s;
         (a && !f) || this.preRenderColliders();
-        g.drawImage(a, d - 20 * s, k - 20 * s);
-        if (B) {
-          for (
-            var e = B.renderedPoints, f = [], b = e.length, v = 0;
-            v < b;
-            v++
-          ) {
-            var m = e[v].x + ia / 2 - xa,
-              C = e[v].y + fa / 2 - ya,
-              m = m / ia,
-              C = C / fa;
-            f.push({
-              x: m,
-              y: C,
-            });
+        g.drawImage(a, d - mapBorder * s, k - mapBorder * s);
+        
+        const snakes = Object.values(z).filter(e => e.constructor.name === 'Ub');
+        for (const snake of snakes) {
+          g.save();
+          
+          if (dada && B && snake.id !== B.id) {
+            g.restore();
+            continue;
           }
-          g.strokeStyle = "hsl(" + B.hue + ", 100%, 50%)";
-          g.lineWidth = 2;
-          e = f.length;
-          m = f[0].x;
-          C = f[0].y;
-          g.beginPath();
-          g.moveTo(d + 120 * m * s, k + 120 * C * s);
-          for (v = 1; v < e; v++)
-            (m = f[v].x),
-              (C = f[v].y),
-              g.lineTo(d + 120 * m * s, k + 120 * C * s);
-          g.stroke();
-          0 < ra &&
-            ((m = Ya + ia / 2 - xa),
-            (C = Za + fa / 2 - ya),
-            (m /= ia),
-            (C /= fa),
-            g.translate(d + 120 * m * s, k + 120 * C * s),
-            g.scale(0.5, 0.5),
-            db() ? t.frames.santa_hat.draw(g) : t.frames.crown.draw(g));
+          
+          var e = snake.renderedPoints, 
+              snakePoints = [], 
+              b = e.length, 
+              v = 0;
+          
+          for (v = 0; v < b; v++) {
+            var m = e[v].x + ia / 2 - xa,
+              C = e[v].y + fa / 2 - ya;
+            m = m / ia;
+            C = C / fa;
+            snakePoints.push({ x: m, y: C });
+          }
+          
+          g.strokeStyle = "hsl(" + snake.hue + ", 100%, 50%)";
+          g.lineWidth = 1.6;
+          
+          var pointCount = snakePoints.length;
+          if (pointCount > 0) {
+            var startX = snakePoints[0].x;
+            var startY = snakePoints[0].y;
+            g.beginPath();
+            g.moveTo(d + mapSide * startX * s, k + mapSide * startY * s);
+            
+            for (var i = 1; i < pointCount; i++) {
+              var pointX = snakePoints[i].x;
+              var pointY = snakePoints[i].y;
+              g.lineTo(d + mapSide * pointX * s, k + mapSide * pointY * s);
+            }
+            g.stroke();
+            
+            if (!dada) {
+              var headX = d + snakePoints[0].x * mapSide * s;
+              var headY = k + snakePoints[0].y * mapSide * s;
+              var baseRadius = 1 * s;
+              
+              if (B && snake.id === B.id) {
+                var time = Date.now() * 0.005;
+                var pulse = Math.sin(time) * 0.5 + 0.5;
+                var shine = Math.sin(time * 2) * 0.3 + 0.7;
+                var depth = sa ? 5 : 2;
+                
+                for (var layer = depth; layer > 0; layer--) {
+                  var layerAlpha = (0.3 / layer) * pulse;
+                  var layerRadius = baseRadius + (layer * 2 * pulse);
+                  g.fillStyle = 'rgba(255, 255, 255, ' + layerAlpha + ')';
+                  g.beginPath();
+                  g.arc(headX, headY, layerRadius, 0, 2 * Math.PI);
+                  g.fill();
+                }
+                
+                g.fillStyle = 'rgba(255, 255, 255, ' + shine + ')';
+              } else {
+                g.fillStyle = 'white';
+              }
+              
+              g.beginPath();
+              g.arc(headX, headY, baseRadius, 0, 2 * Math.PI);
+              g.fill();
+            }
+          }
+          
+          if (0 < ra) {
+            var headX = Ya + ia / 2 - xa;
+            var headY = Za + fa / 2 - ya;
+            var scale = sa ? 1.2 : 0.8;
+            headX /= ia;
+            headY /= fa;
+            g.imageSmoothingEnabled = false;
+            g.translate(d + mapSide * headX * s, k + mapSide * headY * s);
+            g.scale(0.5 * scale, 0.5 * scale);
+            db() ? t.frames.santa_hat.draw(g) : t.frames.crown.draw(g);
+          }
+          
+          g.restore();
         }
         g.restore();
       };
@@ -2613,15 +2674,15 @@
       this.preRenderColliders = function () {
         a = y.createElement("canvas");
         var c = a.getContext("2d");
-        a.width = 160 * s;
-        a.height = 160 * s;
+        a.width = (mapSide + mapBorder*2) * s;
+        a.height = (mapSide + mapBorder*2) * s;
         c.lineWidth = 4;
         c.strokeStyle = "#00ffff";
         c.fillStyle = "#002222";
         c.shadowBlur = 10;
         c.shadowColor = "#00ffff";
         c.beginPath();
-        c.rect(20 * s, 20 * s, 120 * s, 120 * s);
+        c.rect(mapBorder * s, mapBorder * s, mapSide * s, mapSide * s);
         c.stroke();
         c.globalAlpha = 0.5;
         c.shadowBlur = 0;
