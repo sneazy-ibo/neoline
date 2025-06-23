@@ -340,6 +340,7 @@
         ";"
       );
   l.viewRadius = 1;
+  l.drawServerPos = false;
   !ta && 3 < Q && ((ta = 1), (l.localStorage.speedUpTut = ta));
   var $a = !1;
   "true" == l.localStorage.lq && (sa = !1);
@@ -871,6 +872,9 @@
             break;
           case 'b':
             l.demogorogorogorogon();
+            break;
+          case 'o':
+            l.drawServerPos = !l.drawServerPos;
             break;
           case 'k':
             n.leave();
@@ -1800,6 +1804,7 @@
           e = this.getWidth();
         ja = e / 2.5;
         1 < ja && (ja = 1 + 0.6 * (ja - 1));
+        window.drawServerPos && this.drawCircle(b, this.lastServerX, this.lastServerY, '#FFFF00', 4);
         this.calcRenderPoints();
         U = !1;
         var f = (100 - m) / 30;
