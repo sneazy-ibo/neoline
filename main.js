@@ -337,6 +337,7 @@
       "LOL;EASY!;OOPS!;I DARE YOU!;GOTCHA!;RUN!;TEAM?;YES!;NO!;KILL THE KING!".split(
         ";"
       );
+  l.viewRadius = 1;
   !ta && 3 < Q && ((ta = 1), (l.localStorage.speedUpTut = ta));
   var $a = !1;
   "true" == l.localStorage.lq && (sa = !1);
@@ -839,6 +840,17 @@
       };
       a.keydown = function (d) {
         switch (d.key.toLowerCase()) {
+          case '+':
+          case '*':
+          case '=':
+            l.viewRadius /= d.shiftKey ? 1.5 : 1.1;
+            W.resize();
+            break;
+          case '-':
+          case '_':
+            l.viewRadius *= d.shiftKey ? 1.5 : 1.1;
+            W.resize();
+            break;
           case 'g':
             l.toggleGraphics();
             break;
@@ -3041,8 +3053,9 @@
         b.setUint8(0, 7);
         var c = 1;
         sa || (c = 2);
-        b.setUint16(1, (ma / 10) * 1 * c, !0);
-        b.setUint16(3, (Z / 10) * 1 * c, !0);
+        var visionPerc = l.viewRadius * 1.25;
+        b.setUint16(1, (ma / 10) * visionPerc * c, !0);
+        b.setUint16(3, (Z / 10) * visionPerc * c, !0);
         d.send(a);
       };
       this.sendBoost = function (a) {
@@ -3402,7 +3415,7 @@
           Pb && (Ob = 0.6);
           pb += (Ob - pb) / 10;
           k.zoom = (1 / (l.devicePixelRatio / Lb)) * pb * 1;
-          k.zoom *= s;
+          k.zoom *= s / viewRadius;
           var a = k.x,
             c = k.y;
           if (B && !Xa)
