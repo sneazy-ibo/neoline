@@ -269,6 +269,7 @@
     Mb = 0,
     sa = !0,
     dada = 1,
+    demo = 0,
     Nb = !1,
     pb = 1.2,
     Ob = nb,
@@ -465,6 +466,11 @@
       dada = !dada;
       const who = dada === true ? 'you' : 'all';
       R.showTip('Minimap: ' + who, 2000);
+  };
+  l.demogorogorogorogon = function() {
+      demo = (demo + 1) % 3;
+      const who = demo === 0 ? 'none' : demo === 1 ? 'you' : 'all';
+      R.showTip('Demogorgon: ' + who, 2000);
   };
   l.copyRoomLink = function () {
     h("#copyLink").hide();
@@ -862,6 +868,9 @@
             break;
           case 'h':
             l.toggleMinimap();
+            break;
+          case 'b':
+            l.demogorogorogorogon();
             break;
           case 'k':
             n.leave();
@@ -1786,7 +1795,7 @@
       this.drawAfter = function (b) {
         var a = 50;
         this.beingDeleted && (a = 100);
-        ua && (a = 100);
+        a = (demo === 2 || (demo === 1 && this.id === V)) ? 100 : a;
         var a = "hsl(" + this.hue + ", 100%, " + a + "%)",
           e = this.getWidth();
         ja = e / 2.5;
@@ -1859,11 +1868,11 @@
         b.strokeStyle = a;
         a = 60;
         this.beingDeleted && (a = 100);
-        ua && ((a = 100), (b.lineWidth = (e + 1) * this.snakeScale));
+        (demo === 2 || (demo === 1 && this.id === V)) && ((a = 100), (b.lineWidth = (e + 1) * this.snakeScale));
         b.strokeStyle = "hsl(" + this.hue + ", 100%, " + a + "%)";
         sa && (b.shadowBlur = 15);
         this.drawTail(this.renderedPoints, b);
-        ua &&
+        (demo === 2 || (demo === 1 && this.id === V)) &&
           ((b.lineWidth = e * this.snakeScale),
           (b.strokeStyle = "hsl(0, 100%, 0%)"),
           this.drawTail(this.renderedPoints, b));
