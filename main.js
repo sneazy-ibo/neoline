@@ -455,6 +455,10 @@
     lb = null;
     n.getServerAndConnect();
   };
+  l.toggleGraphics = function() {
+      sa = !sa;
+      W.resize();
+  };
   l.copyRoomLink = function () {
     h("#copyLink").hide();
     h("#copyLinkBox").show();
@@ -834,6 +838,11 @@
             (kc = a.clientY));
       };
       a.keydown = function (d) {
+        switch (d.key.toLowerCase()) {
+          case 'g':
+            l.toggleGraphics();
+            break;
+        }
         (32 != d.keyCode &&
           38 != d.keyCode &&
           87 != d.keyCode &&
@@ -3267,8 +3276,8 @@
       var A = function () {
         var b = 2;
         sa && (b = 1);
-        k.width = innerWidth;
-        k.height = innerHeight;
+        k.width = innerWidth / b;
+        k.height = innerHeight / b;
         ma = k.width;
         Z = k.height;
         var a = Z * b,
