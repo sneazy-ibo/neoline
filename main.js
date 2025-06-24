@@ -341,6 +341,8 @@
       );
   l.viewRadius = 1;
   l.drawServerPos = false;
+  l.fixInward = true;
+  l.lastTurnPoint = null;
   !ta && 3 < Q && ((ta = 1), (l.localStorage.speedUpTut = ta));
   var $a = !1;
   "true" == l.localStorage.lq && (sa = !1);
@@ -950,22 +952,22 @@
                 ? 1 != a.direction &&
                   3 != a.direction &&
                   0 != a.direction &&
-                  ((a.direction = 1), a.turn(a.direction, e, g, f, 0))
+                  (a.turn(1, f))
                 : 37 == d.keyCode || 65 == d.keyCode
                 ? 2 != a.direction &&
                   4 != a.direction &&
                   0 != a.direction &&
-                  ((a.direction = 2), a.turn(a.direction, e, g, f, 0))
+                  (a.turn(2, f))
                 : 40 == d.keyCode || 83 == d.keyCode
                 ? 3 != a.direction &&
                   1 != a.direction &&
                   0 != a.direction &&
-                  ((a.direction = 3), a.turn(a.direction, e, g, f, 0))
+                  (a.turn(3, f))
                 : (39 != d.keyCode && 68 != d.keyCode) ||
                   4 == a.direction ||
                   2 == a.direction ||
                   0 == a.direction ||
-                  ((a.direction = 4), a.turn(a.direction, e, g, f, 0)))
+                  (a.turn(4, f)))
             : Xa &&
               ((e = 0.01),
               d.shiftKey && (e = 0.1),
@@ -1004,18 +1006,18 @@
         }
       };
       a.keyup = function (a) {};
-      this.turn = function (a, g, f, e, b) {
+      this.turn = function (d, e) {
         c++;
+        var g, f, q;
         Sb
           ? ((g = +new Date()),
             (f = g - rc),
             (rc = g),
             30 > f && (e += 30),
-            (e = B.addTurnPoint(a, e)),
-            (g = 10 * e.x),
-            (f = 10 * e.y),
-            n.sendTurnPoint(a, 1 == a || 3 == a ? g / 10 : -f / 10))
-          : n.sendDirection(a);
+            (q = B.addTurnPoint(d, e, l.fixInward)),
+            (a.direction = d),
+            n.sendTurnPoint(d, d % 2 !== 0 ? q.x : -q.y))
+          : n.sendDirection(d);
       };
       this.addListeners = function () {
         y.addEventListener("mousedown", a.mousedown, !1);
@@ -2295,7 +2297,7 @@
           direction: b,
         };
       };
-      this.addTurnPoint = function (b, a) {
+      this.addTurnPoint = function (b, a, i) {
         300 < qb && (a += qb - 300);
         var e = (a * this.lastSpeed) / Da,
           c = this.findLastWaitingPoint(this.direction),
@@ -2303,16 +2305,24 @@
           f = fb(c.direction),
           e = c.x + f.x * d,
           c = c.y + f.y * d;
+        if (i && l.lastTurnPoint) {
+          var g = 10 * l.lastTurnPoint.x,
+            h = 10 * l.lastTurnPoint.y;
+          e = 0 === b % 2 ? e : 2 > Math.abs(e - g) ? g + 2 * (0 < f.x ? 1 : -1) : e;
+          c = 0 === b % 2 ? (2 > Math.abs(c - h) ? h + 2 * (0 < f.y ? 1 : -1) : c) : c;
+        }
         ka++;
         this.waitingPoints.push({
           x: e,
           y: c,
           d: b,
         });
-        return {
+        var z = {
           x: e / 10,
           y: c / 10,
         };
+        i && (l.lastTurnPoint = z);
+        return z;
       };
       this.deleteNetwork = function (b, a) {
         this.id == V && 0 <= Q + 1 && ((xb = this.killedByID), (Aa = 30));
