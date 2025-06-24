@@ -1,0 +1,217 @@
+:root {
+  --glass-bg: rgba(0, 0, 0, 0.205);
+  --glass-border: rgba(0, 208, 255, 0.063);
+  --glass-highlight: rgba(0, 210, 255, 0.7);
+  --glass-shadow: 0 8px 32px rgba(0, 40, 85, 0.2);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.8);
+  --text-highlight: #03ffff;
+  --border-color: #03FFFF;
+  --transition-speed: 0.3s;
+}
+.server-icon {
+  position: absolute;
+  top: 13px;
+  right: 13px;
+  cursor: pointer;
+  z-index: 11;
+}
+
+.server-dropdown {
+  position: absolute;
+  top: 60px;
+  right: 10px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  color: var(--text-primary);
+  width: 280px;
+  font-family: 'Segoe UI', Arial, sans-serif;
+  z-index: 10;
+  max-height: 0;
+  overflow: hidden;
+  border: var(--border-color);
+  transition: max-height var(--transition-speed), box-shadow var(--transition-speed);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: var(--glass-shadow);
+}
+
+.server-dropdown.open {
+  max-height: 500px;
+  border: var(--border-color) solid 2px;
+}
+
+.server-dropdown h3 {
+  margin: 0;
+  padding: 15px;
+  text-align: center;
+  color: var(--text-highlight);
+  border-bottom: 1px solid var(--glass-border);
+  font-family: 'Arial Black', Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--glass-border);
+  padding: 0 5px;
+}
+
+.tab {
+  flex: 1;
+  padding: 10px 5px;
+  text-align: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  background-color: transparent;
+  transition: all var(--transition-speed);
+  position: relative;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.tab-count {
+  font-size: 12px;
+  opacity: 0.8;
+  font-weight: normal;
+  display: inline-block;
+  margin-left: 2px;
+}
+
+.tab:after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--text-highlight);
+  transition: all var(--transition-speed);
+  transform: translateX(-50%);
+}
+
+.tab:hover {
+  color: var(--text-highlight);
+}
+
+.tab:hover:after {
+  width: 30%;
+}
+
+.tab.active {
+  color: var(--text-highlight);
+}
+
+.tab.active:after {
+  width: 80%;
+}
+
+.room-list {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--glass-highlight) transparent;
+}
+
+.room-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.room-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.room-list::-webkit-scrollbar-thumb {
+  background-color: var(--glass-border);
+  border-radius: 3px;
+}
+
+.room-item {
+  background-color: rgba(0, 30, 60, 0.3);
+  margin: 8px 0;
+  padding: 12px;
+  border: 1px solid rgba(0, 210, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all var(--transition-speed);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.room-item:hover {
+  background-color: rgba(0, 210, 255, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 210, 255, 0.1);
+  border-color: rgba(0, 210, 255, 0.3);
+}
+
+.room-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.room-cc {
+  text-transform: uppercase;
+  font-weight: bold;
+  color: var(--text-highlight);
+  font-size: 13px;
+  letter-spacing: 0.8px;
+  margin-right: 5px;
+}
+
+.current-server {
+  background-color: rgba(0, 210, 255, 0.2);
+  border: 1px solid var(--glass-highlight);
+  position: relative;
+}
+
+.current-server:before {
+  content: '•';
+  position: absolute;
+  top: 12px;
+  left: 10px;
+  color: var(--text-highlight);
+  font-size: 14px;
+}
+
+.current-server .room-info {
+  padding-left: 10px;
+}
+
+.room-id {
+  color: var(--text-highlight);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+.no-rooms {
+  padding: 20px 15px;
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+  font-size: 14px;
+}
+
+#current-room-id {
+  position: absolute;
+  top: 13px;
+  right: 50px;
+  color: var(--text-highlight);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  background: var(--glass-bg);
+  padding: 8px 12px;
+  border-radius: 15px;
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 11;
+}

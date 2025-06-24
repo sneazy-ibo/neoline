@@ -377,6 +377,48 @@
           N && console.log("Reusing last CC: " + Ra));
     }
   })();
+  var CC = function () {
+    const ccList = ["us","ca","uk","de","fr","au","br","jp","ru","es","it","nl","se","no","dk","pl","fi","mx","ar","cl","nz","in","id","kr","cn","tr","gr","be","ch","at","cz","pt","il","sa","ae","za","ro","hu","sk","ie","bg","rs","hr","lt","lv","ee","th","my","sg","ph","vn"];
+    const roomCache = new Set();
+    const newRooms = [];
+
+    const promises = ccList.map(cc => 
+      new Promise(resolve => {
+        h.ajax({
+          url: `http${Hb ? 's' : ''}://powerline-master.coolmathgames.com`,
+          type: "PUT",
+          dataType: "text",
+          contentType: "text/plain",
+          data: cc,
+          success: response => {
+            if (response !== "0") {
+              const [serverInfo, roomID] = response.split("!");
+              const [host, roomNumber = 0] = serverInfo.split("/");
+              const roomKey = `${host}/${roomNumber}`;
+              
+              if (!roomCache.has(roomKey)) {
+                roomCache.add(roomKey);
+                const entry = { cc, host, roomNumber, roomID };
+                newRooms.push(entry);
+              }
+            }
+            resolve();
+          },
+          error: () => resolve()
+        });
+      })
+    );
+
+    Promise.all(promises).then(() => {
+      if (newRooms.length) {
+        l.rooms = newRooms;
+        console.table(newRooms);
+        n.getServerAndConnect();
+      } else {
+        console.log("No rooms found.");
+      }
+    });
+  };
   var Tb = function () {
       aa = +new Date();
       var a = 0;
@@ -2957,7 +2999,9 @@
           } else a = "ws:" + a[1] + ":" + (parseInt(n.roomNumber) + 8080);
           N && console.log("Connecting to " + a + "...");
           try {
-            d = new WebSocket(a);
+            l.ws = l.ws || a;
+            d = new WebSocket(l.ws);
+            l.dispatchEvent(new CustomEvent('roomsloaded', { detail: l.rooms }));
           } catch (c) {
             setTimeout(n.getServerAndConnect, 1e3);
             return;
@@ -3458,8 +3502,8 @@
         myName = "";
         D = new md(k, f, 0, 0);
         Rb = new jd();
-        n = new kd();
-        n.getServerAndConnect();
+        l.network = n = new kd();
+        1 ? CC() : n.getServerAndConnect();
         v = new nd();
         F = new od();
         F.load(function () {});
