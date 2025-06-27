@@ -473,6 +473,7 @@
         );
       }
       W.clearSpeedupTutorial();
+      changelog.hideChangelog(),
       n.hasConnection
         ? L
           ? Bb()

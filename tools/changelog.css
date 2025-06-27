@@ -1,0 +1,285 @@
+.changelog-container {
+  position: fixed;
+  left: 0;
+  top: 20%;
+  width: 350px;
+  height: 60vh;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.changelog-container.show {
+  opacity: 1;
+}
+
+.changelog-header {
+  margin: 0 0 20px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.changelog-header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.github-icon {
+  width: 24px;
+  height: 24px;
+  fill: #00ffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  filter: drop-shadow(0 0 6px rgba(0, 255, 255, 0.4));
+  margin-right: 20px;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.github-icon:hover {
+  fill: #ffffff;
+  filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.8));
+  transform: scale(1.1);
+  animation: none;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.5));
+    transform: scale(1);
+  }
+  50% {
+    filter: drop-shadow(0 0 12px rgba(0, 255, 255, 0.8));
+    transform: scale(1.1);
+  }
+}
+
+.changelog-title {
+  color: #00ffff;
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+  text-shadow: #00ffff61 1px 0 10px;
+}
+
+.changelog-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+  margin: 0;
+}
+
+.changelog-scroll {
+  height: calc(100% - 80px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  mask: linear-gradient(to bottom, transparent 0%, black 5%, black 60%, transparent 100%);
+  -webkit-mask: linear-gradient(to bottom, transparent 0%, black 5%, black 60%, transparent 100%);
+}
+
+.changelog-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.changelog-scroll::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.changelog-scroll::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+.changelog-commits {
+  padding: 0;
+}
+
+.changelog-commit {
+  display: flex;
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(0, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  margin: 4px 8px;
+}
+
+.changelog-commit:hover {
+  background: rgba(0, 255, 255, 0.1);
+  transform: translateX(8px);
+  box-shadow: 0 4px 16px rgba(0, 255, 255, 0.2);
+}
+
+.commit-avatar {
+  margin-right: 10px;
+  position: relative;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  will-change: transform;
+}
+
+.commit-avatar img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  transition: all 0.25s ease-out;
+  box-sizing: border-box;
+}
+
+.commit-avatar:hover img {
+  transform: scale(1.15);
+  border-color: rgba(0, 255, 255, 0.7);
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.4);
+  filter: brightness(1.1);
+}
+
+.commit-avatar::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-image: var(--avatar-url);
+  background-size: cover;
+  background-position: center;
+  transform: translate(-50%, -50%);
+  filter: blur(12px);
+  opacity: 0.4;
+  z-index: -1;
+}
+
+.commit-content {
+  flex: 1;
+}
+
+.commit-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.commit-message {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 500;
+  flex: 1;
+  margin-right: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  text-shadow: 0 0 18px rgba(255, 255, 255, 0.8);
+}
+
+.commit-sha {
+  color: rgba(0, 255, 255, 0.7);
+  font-size: 9px;
+  font-family: monospace;
+  background: rgba(0, 255, 255, 0.1);
+  padding: 1px 4px;
+  border-radius: 2px;
+  text-shadow: 0 0 16px rgba(0, 255, 255, 1);
+}
+
+.commit-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 3px;
+}
+
+.commit-author {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 10px;
+  max-width: 120px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.commit-author:hover {
+  color: #00ffff;
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+}
+
+.commit-date {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 9px;
+  text-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+}
+
+.changelog-load-more {
+  width: calc(100% - 32px);
+  margin: 16px;
+  padding: 10px;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 4px;
+  background: transparent;
+  color: #00ffff;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.changelog-load-more:hover {
+  background: rgba(0, 255, 255, 0.1);
+}
+
+.changelog-load-more:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.changelog-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 16px;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(0, 255, 255, 0.2);
+  border-top: 2px solid #00ffff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.changelog-error {
+  padding: 16px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.changelog-error h3 {
+  color: #ff4444;
+  margin: 0 0 8px 0;
+  font-size: 14px;
+}
+
+.changelog-error button {
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 3px;
+  color: #00ffff;
+  cursor: pointer;
+  font-size: 11px;
+  transition: background 0.3s ease;
+}
+
+.changelog-error button:hover {
+  background: rgba(0, 255, 255, 0.1);
+}

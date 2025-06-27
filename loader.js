@@ -1,6 +1,6 @@
 (async () => {
   const baseUrl = 'https://raw.githubusercontent.com/sneazy-ibo/neoline/refs/heads/altair/';
-  const files = ['index.html', 'main.js', 'tools/room.js', 'tools/room.css', 'tools/name.js', 'tools/name.css'];
+  const files = ['index.html', 'main.js', 'tools/room.js', 'tools/room.css', 'tools/name.js', 'tools/name.css', 'tools/changelog.js', 'tools/changelog.css'];
 
   const contents = await Promise.all(
     files.map(f => fetch(`${baseUrl}${f}?cb=${Date.now()}`).then(r => r.text()))
