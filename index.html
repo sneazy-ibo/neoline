@@ -131,7 +131,7 @@
                         </form>
                     </div>
                 </div>
-                <div hidden id="statsPage" class="outlinedContainer" style="position:absolute; left:26%; right:26%; top:21%; color:#05FFFF;">
+                <div hidden id="statsPage" class="outlinedContainer" style="position:absolute; left:26%; right:26%; top:31%; min-width: 520px; color:#05FFFF;">
                     <div style="display:flex; height:80px; text-align:center; align-items:center;">
                         <div style="margin:auto; font-size:16px; font-weight:800;">
                             <div id="endScreenMessage" style="color:#00C0C0;">ZAPPED BY</div>
@@ -139,6 +139,10 @@
                         </div>
                     </div>
                     <div style="position:relative; margin-left:52px; font-size:14px; font-weight:800; z-index:1;">
+                        <div class="endScreenStatLine">
+                            <span>TIME</span>
+                            <span id="endScreenTimeAliveXp" class="endScreenStatLineRight" style="right:52px;">0</span>
+                        </div>
                         <div class="endScreenStatLine">
                             <span>SCORE</span>
                             <span id="endScreenScore" class="endScreenStatLineRight" style="right:52px;">0</span>

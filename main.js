@@ -1204,6 +1204,8 @@
         X,
         ja,
         ba,
+        bo,
+        al,
         ka,
         ca = 0;
       this.draw = function (m) {
@@ -1285,27 +1287,33 @@
               m.restore(),
               (m.globalAlpha = 1));
         }
+        
         if (L && B) {
+          var fontSize = sa ? 15 : 20;
+          bo = new wa(fontSize * s, "#00FFFF", !1, "#00AAAA");
+          bo.setValue("ALIVE: " + B.calculateTimeAlive());
+          al = bo.render();
           if (!u || E != Wa || $a)
-            (u = new wa(25 * s, "#00FFFF", !1, "#00AAAA")),
+            (u = new wa(fontSize * s, "#00FFFF", !1, "#00AAAA")),
               u.setValue("ZAPS: " + Wa),
               (ja = u.render()),
               (E = Wa);
           if (!X || Fa != x || $a)
-            (X = new wa(25 * s, "#00FFFF", !1, "#00AAAA")),
+            (X = new wa(fontSize * s, "#00FFFF", !1, "#00AAAA")),
               X.setValue("SCORE: " + x),
               (ba = X.render()),
               (Fa = x);
           if (!ka || $a)
-            (ka = new wa(25 * s, "#00FFFF", !1, "#00AAAA")),
+            (ka = new wa(fontSize * s, "#00FFFF", !1, "#00AAAA")),
               ka.setValue("TALK"),
-              ka.render();
+              tata = ka.render();
           $a = !1;
           m.save();
           m.scale(s, s);
           m.globalAlpha = 0.3;
-          m.drawImage(ja, 5, canvas.height / s - ja.height - ba.height - 5);
-          m.drawImage(ba, 5, canvas.height / s - ja.height - 5);
+          m.drawImage(ja, 5, canvas.height / s - ja.height - ba.height - al.height - 5);
+          m.drawImage(ba, 5, canvas.height / s - ja.height - al.height - 5);
+          m.drawImage(al, 5, canvas.height / s - ja.height - 5);
           m.globalAlpha = 1;
           m.restore();
         }
@@ -1489,6 +1497,7 @@
     Ub = function () {
       var a = this;
       this.snake = !0;
+      this.bornTime = performance.now();
       this.killReason = 0;
       this.id = -1;
       this.lastServerY =
@@ -1596,7 +1605,8 @@
           if (y)
             (this.snakeScale -= 0.1),
               0 > this.snakeScale &&
-                (this.id == V && ((qa.direction = 1), (V = 0), (B = null)),
+                (this.id == V && ((qa.direction = 1), (V = 0), (
+            document.querySelector("#endScreenTimeAliveXp").innerText = this.calculateTimeAlive(true)),(B = null)),
                 delete z[this.id],
                 this.cleanup());
           else {
@@ -1684,6 +1694,29 @@
           ((Ia += a), 2e3 < Ia && ((ta = 1), (l.localStorage.speedUpTut = 1)));
         pa -= (a / 1e3) * 20;
         0 > pa && (pa = 0);
+      };
+      this.calculateTimeAlive = function(minutes = false) {
+        const timeElapsedMs = performance.now() - this.bornTime;
+        
+        if (minutes) {
+          // Format: "2m 35s" or "45.3s"
+          const deltaTime = timeElapsedMs / 1000;
+          
+          if (deltaTime > 60.0) {
+            const mins = Math.floor(deltaTime / 60);
+            const secs = (deltaTime - 60 * mins).toFixed(0);
+            return mins + 'm ' + secs + 's';
+          } else {
+            return deltaTime.toFixed(1) + 's';
+          }
+        } else {
+          // Format: "02:35.42"
+          const minutes = Math.floor(timeElapsedMs / 60000);
+          const seconds = Math.floor((timeElapsedMs % 60000) / 1000);
+          const centiseconds = Math.floor((timeElapsedMs % 1000) / 10);
+          
+          return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(centiseconds).padStart(2, '0')}`;
+        }
       };
       this.drawCircle = function (b, a, e, d, v) {
         b.beginPath();
@@ -5315,7 +5348,7 @@
           ba = null;
         }, 18e4);
       };
-      this.cleanupStayinAliveAchievement = function () {
+      this.cleanupStayinAliveAchievement = function () {;
         null !== ba && (clearTimeout(ba), (ba = null));
       };
       this.currentProgressStayinAliveAchievement = function () {
