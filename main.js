@@ -339,6 +339,9 @@
       "LOL;EASY!;OOPS!;I DARE YOU!;GOTCHA!;RUN!;TEAM?;YES!;NO!;KILL THE KING!".split(
         ";"
       );
+  l.first = ib;
+  l.second = jb;
+  l.nicks = [];
   l.viewRadius = 1;
   l.drawServerPos = false;
   l.fixInward = true;
@@ -478,7 +481,7 @@
             (qa.mouseMoved = !1),
             Bb(),
             (Yb = a),
-            Kc(),
+            n.sendNick(Yb),
             6 > Mb &&
               R &&
               0 == Mb % 3 &&
@@ -630,20 +633,6 @@
         h("#soundOffImg").hide(),
         R && R.showTip("Sounds Enabled", 3e3));
     l.localStorage.muteVol = ga;
-  };
-  var Ea = 0;
-  l.randomizeNicks = function () {
-    Pa = parseInt(Math.random() * ib.length);
-    Qa = parseInt(Math.random() * jb.length);
-    h("#nick")[0].value = ib[Pa] + " " + jb[Qa];
-    Ea += 180;
-    h("#refreshButton").css({
-      transform: "rotate(" + Ea + "deg)",
-      "-ms-transform": "rotate(" + Ea + "deg)",
-      "-moz-transform": "rotate(" + Ea + "deg)",
-      "-webkit-transform": "rotate(" + Ea + "deg)",
-      "-o-transform": "rotate(" + Ea + "deg)",
-    });
   };
   var Sa = !1;
   l.openAchievements = function () {
@@ -3152,6 +3141,13 @@
         d.send(a);
       };
       this.sendNick = function (a) {
+        const nickIndexes = Array.isArray(window.nicks) && window.nicks.length
+          ? window.nicks
+          : (window.localStorage.nickIndexes || "0,0").split(",");
+
+        [Pa, Qa] = nickIndexes;
+        window.localStorage.nickIndexes = `${Pa},${Qa}`;
+
         myName = a;
         a = new ArrayBuffer(7);
         var b = new DataView(a);

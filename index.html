@@ -49,10 +49,15 @@
                                 <div id="topGui" style="height:100px;">
                                     <div id="nickInput" style="height:50px;">
                                         <center>
-                                            <input readonly style="cursor: auto;" id="nick" type="text" class="form-control input-nick" maxlength="30" onkeydown="if (event.keyCode == 13){ clickPlay(document.getElementById('nick').value); return false;} return true;" autofocus/>
-                                            <a style="display:inherit;position:absolute;right: 60px;top: 70px" id="refreshButton" href="javascript:randomizeNicks();" class="btn-naked">
-                                                <img id="refreshImg" src="images/refresh.png" onmouseover="this.src='images/refresh_mouseover.png'" onmouseout="this.src='images/refresh.png'"/>
-                                            </a>
+                                            <div style="position: relative; display: flex; align-items: center; justify-content: center; gap: 15px;">
+                                                <svg id="nicknameBook" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 25px; height: 25px; cursor: pointer; fill: #00ffff;"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                                                    <path d="M160 96a96 96 0 1 1 192 0A96 96 0 1 1 160 96zm80 152l0 264-48.4-24.2c-20.9-10.4-43.5-17-66.8-19.3l-96-9.6C12.5 457.2 0 443.5 0 427L0 224c0-17.7 14.3-32 32-32l30.3 0c63.6 0 125.6 19.6 177.7 56zm32 264l0-264c52.1-36.4 114.1-56 177.7-56l30.3 0c17.7 0 32 14.3 32 32l0 203c0 16.4-12.5 30.2-28.8 31.8l-96 9.6c-23.2 2.3-45.9 8.9-66.8 19.3L272 512z"/>
+                                                </svg>
+                                                <input readonly style="cursor: pointer;" id="nick" type="text" class="form-control input-nick" maxlength="30" onkeydown="if (event.keyCode == 13){ clickPlay(document.getElementById('nick').value); return false;} return true;" autofocus/>
+                                                <svg id="refreshSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" style="width: 25px; height: 25px; cursor: pointer; fill: #00ffff;"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                                                    <path d="M142.9 142.9c-17.5 17.5-30.1 38-37.8 59.8c-5.9 16.7-24.2 25.4-40.8 19.5s-25.4-24.2-19.5-40.8C55.6 150.7 73.2 122 97.6 97.6c87.2-87.2 228.3-87.5 315.8-1L455 55c6.9-6.9 17.2-8.9 26.2-5.2s14.8 12.5 14.8 22.2l0 128c0 13.3-10.7 24-24 24l-8.4 0c0 0 0 0 0 0L344 224c-9.7 0-18.5-5.8-22.2-14.8s-1.7-19.3 5.2-26.2l41.1-41.1c-62.6-61.5-163.1-61.2-225.3 1zM16 312c0-13.3 10.7-24 24-24l7.6 0 .7 0L168 288c9.7 0 18.5 5.8 22.2 14.8s1.7 19.3-5.2 26.2l-41.1 41.1c62.6 61.5 163.1 61.2 225.3-1c17.5-17.5 30.1-38 37.8-59.8c5.9-16.7 24.2-25.4 40.8-19.5s25.4 24.2 19.5 40.8c-10.8 30.6-28.4 59.3-52.9 83.8c-87.2 87.2-228.3 87.5-315.8 1L57 457c-6.9 6.9-17.2 8.9-26.2 5.2S16 449.7 16 440l0-119.6 0-.7 0-7.6z"/>
+                                                </svg>
+                                            </div>
                                         </center>
                                     </div>
                                     <div id="mainMenuXpBar" style="position:absolute; left:8%; right:8%; top:150px; bottom:-100px">
@@ -218,6 +223,16 @@
                         <div class="tab" data-host="aus">AUS</div>
                     </div>
                     <div class="room-list" id="room-list"></div>
+                </div>
+                <div id="name-dropdown" class="name-dropdown" style="display: none;">
+                    <div class="name-tabs">
+                        <div class="name-tab active" data-tab="first">First Name</div>
+                        <div class="name-tab" data-tab="last">Last Name</div>
+                    </div>
+                    <div class="name-list-container">
+                        <div id="first-name-list" class="name-list active"></div>
+                        <div id="last-name-list" class="name-list"></div>
+                    </div>
                 </div>
                 <footer hidden id="soundDiv" style="z-index:1000; position:absolute; bottom:0; left:0; padding:25px;">
                     <button type="submit" id="muteButton" onclick="toggleSound(); return false;" class="btn-naked">
