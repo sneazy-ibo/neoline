@@ -526,6 +526,10 @@
     l.showAchievements = !l.showAchievements;
     R.showTip((l.showAchievements ? 'Showing' : 'Hiding') + ' Achievements', 2000);
   };
+  l.toggleShake = function() {
+    l.showShake = !l.showShake;
+    R.showTip((l.showShake ? 'Enabling' : 'Disabling') + ' Camera Shake', 2000);
+  };
   l.copyRoomLink = function () {
     h("#copyLink").hide();
     h("#copyLinkBox").show();
@@ -914,6 +918,9 @@
             break;
           case 'n':
             l.displayAchievements();
+            break;
+          case 'u':
+            l.toggleShake();
             break;
           case 'o':
             l.drawServerPos = !l.drawServerPos;
@@ -2802,7 +2809,7 @@
                 b = b.offset;
               r.signalEnemyKilledByPlayer(c, d);
               Wa++;
-              D.shake(7);
+              l.showShake && D.shake(7);
               break;
             case 2:
               a.getUint16(b, !0);
