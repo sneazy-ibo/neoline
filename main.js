@@ -2123,6 +2123,14 @@
             b.scale(f, f),
             t.frames.trophy.draw(b),
             b.scale(1 / f, 1 / f),
+            b.translate(0, e * d),
+            (e += 20));
+          va &&
+            ((f = 0.35 * d),
+            b.translate(0, -e * d),
+            b.scale(f, f),
+            this.drawKillStreakIcon(b, va),
+            b.scale(1 / f, 1 / f),
             b.translate(0, e * d));
           b.globalAlpha = 0.85 * c;
           b.fillStyle = "rgba(255, 255, 255, 0.6)";
