@@ -346,6 +346,7 @@
   l.drawServerPos = false;
   l.fixInward = true;
   l.lastTurnPoint = null;
+  l.showAchievements = true;
   !ta && 3 < Q && ((ta = 1), (l.localStorage.speedUpTut = ta));
   var $a = !1;
   "true" == l.localStorage.lq && (sa = !1);
@@ -520,6 +521,10 @@
       demo = (demo + 1) % 3;
       const who = demo === 0 ? 'none' : demo === 1 ? 'you' : 'all';
       R.showTip('Demogorgon: ' + who, 2000);
+  };
+  l.displayAchievements = function() {
+    l.showAchievements = !l.showAchievements;
+    R.showTip((l.showAchievements ? 'Showing' : 'Hiding') + ' Achievements', 2000);
   };
   l.copyRoomLink = function () {
     h("#copyLink").hide();
@@ -906,6 +911,9 @@
             break;
           case 'b':
             l.demogorogorogorogon();
+            break;
+          case 'n':
+            l.displayAchievements();
             break;
           case 'o':
             l.drawServerPos = !l.drawServerPos;
@@ -1458,11 +1466,11 @@
       this.addSpecialMessage = function (a, e) {
         var d = Date.now();
         0 < b.length && (d = 200 + Math.max(d, b[0].time + 200));
-        b.unshift({
+        window.showAchievements && b.unshift({
           message: a,
           text: null,
           time: d,
-          size: e,
+          size: e / (sa ? 2 : 1),
         });
       };
       this.refreshLeaderboard = function (b) {
