@@ -159,33 +159,46 @@
   function Ua(a) {
     return "" == a ? "<Unnamed>" : a;
   }
-  function Eb(a, c, g, d, k, f) {
-    f /= 2;
-    a.beginPath();
-    a.moveTo(c, g + f);
-    a.lineTo(c, g + k - f);
-    a.quadraticCurveTo(c, g + k, c + f, g + k);
-    a.lineTo(c + d - f, g + k);
-    a.quadraticCurveTo(c + d, g + k, c + d, g + k - f);
-    a.lineTo(c + d, g + f);
-    a.quadraticCurveTo(c + d, g, c + d - f, g);
-    a.lineTo(c + f, g);
-    a.quadraticCurveTo(c, g, c, g + f);
-    a.closePath();
-    a.fill();
+  function drawRoundedRectangle(ctx, x, y, w, h, r) {
+    var r = r / 2;
+    ctx.beginPath();
+    ctx.moveTo(x, y + r);
+    ctx.lineTo(x, y + h - r);
+    ctx.quadraticCurveTo(x, y + h, x + r, y + h);
+    ctx.lineTo(x + w - r, y + h);
+    ctx.quadraticCurveTo(x + w, y + h, x + w, y + h - r);
+    ctx.lineTo(x + w, y + r);
+    ctx.quadraticCurveTo(x + w, y, x + w - r, y);
+    ctx.lineTo(x + r, y);
+    ctx.quadraticCurveTo(x, y, x, y + r);
+    ctx.closePath();
+    ctx.fill();
   }
-  function Nc(a, c, g, d, k, f) {
-    f /= 2;
-    a.beginPath();
-    a.moveTo(c, g + f);
-    a.lineTo(c, g + k);
-    a.lineTo(c + d, g + k);
-    a.lineTo(c + d, g + f);
-    a.quadraticCurveTo(c + d, g, c + d - f, g);
-    a.lineTo(c + f, g);
-    a.quadraticCurveTo(c, g, c, g + f);
-    a.closePath();
-    a.fill();
+  function drawLeftRoundedRectangle(ctx, x, y, w, h, r) {
+    var r = r / 2;
+    ctx.beginPath();
+    ctx.moveTo(x, y + r);
+    ctx.lineTo(x, y + h - r);
+    ctx.quadraticCurveTo(x, y + h, x + r, y + h);
+    ctx.lineTo(x + w, y + h);
+    ctx.lineTo(x + w, y);
+    ctx.lineTo(x + r, y);
+    ctx.quadraticCurveTo(x, y, x, y + r);
+    ctx.closePath();
+    ctx.fill();
+  }
+  function drawTopRoundedRectangle(ctx, x, y, w, h, r) {
+    var r = r / 2;
+    ctx.beginPath();
+    ctx.moveTo(x, y + r);
+    ctx.lineTo(x, y + h);
+    ctx.lineTo(x + w, y + h);
+    ctx.lineTo(x + w, y + r);
+    ctx.quadraticCurveTo(x + w, y, x + w - r, y);
+    ctx.lineTo(x + r, y);
+    ctx.quadraticCurveTo(x, y, x, y + r);
+    ctx.closePath();
+    ctx.fill();
   }
   function dc(a, c, g) {
     var d = a * Math.cos(g) - c * Math.sin(g);
@@ -315,6 +328,7 @@
     Sb = !0,
     rc = 0,
     sc = 40,
+    talkEnabled = false,
     F,
     S = 1,
     ga = l.localStorage.muteVol;
@@ -783,7 +797,7 @@
         this._usingRoundedFrame &&
           ((c.fillStyle = this._roundedFrameStyle),
           (c.globalAlpha = this._frameOpacity),
-          Eb(c, 0, 0, a.width, a.height, 30),
+          drawRoundedRectangle(c, 0, 0, a.width, a.height, 30),
           (c.globalAlpha = 1));
         a = v + b / 2;
         k = v + this._addTop + k / 2;
@@ -968,6 +982,26 @@
                 (P.domElement.style.visibility = "visible"),
                 n.ping()),
             (rb = !rb));
+          if(B && talkEnabled > 0.0)
+            {
+              if(d.keyCode >= 49 && d.keyCode <= 57 || d.keyCode == 48)
+              {
+                if(B.canTalk())
+                {		
+                  if(d.keyCode >= 49 && d.keyCode <= 57){
+                    n.sendTalk(d.keyCode - 49 + 1);
+                    R.hideTalkLayer();
+                  }else if(d.keyCode == 48){
+                    n.sendTalk(10);
+                    R.hideTalkLayer();
+                  }
+                }else{
+                  R.cantTalk();
+                }
+              }else if(d.keyCode == 84){
+                R.toggleTalkLayer();
+              }
+            }
           if (N)
             if (75 == d.keyCode) n.leave();
             else if (76 == d.keyCode)
@@ -1222,7 +1256,9 @@
         bo,
         al,
         ka,
-        ca = 0;
+        talkLayer,
+        talkBlink = 0;
+        prev_talkStamina = 0;
       this.draw = function (m) {
         var h = Date.now();
         if (0 < d) {
@@ -1326,9 +1362,35 @@
           m.save();
           m.scale(s, s);
           m.globalAlpha = 0.3;
+          m.drawImage(tata, 5, canvas.height / s - ja.height - ba.height - al.height - tata.height - 5);
           m.drawImage(ja, 5, canvas.height / s - ja.height - ba.height - al.height - 5);
           m.drawImage(ba, 5, canvas.height / s - ja.height - al.height - 5);
           m.drawImage(al, 5, canvas.height / s - ja.height - 5);
+
+          if (talkEnabled > 0.0) {
+            var fill = B.talkStamina / 255;
+            if (B.talkStamina == 255 && prev_talkStamina < 255) {
+              if (!window.localStorage.talk)
+                window.localStorage.talk = 1;
+              else
+                window.localStorage.talk++;
+
+              if (window.localStorage.talk <= 7 && window.localStorage.talk % 2 == 0)
+                R.showTip('Press T to talk', 4000);
+            }
+            prev_talkStamina = B.talkStamina;
+
+            if (fill == 1.0)
+              m.globalAlpha = 0.3;
+            else
+              m.globalAlpha = 0.1 + talkBlink * 0.6;
+
+            var talkY = canvas.height / s - ja.height - ba.height - al.height - tata.height - 5
+            var radius = 4;
+            var talkWaitX = tata.width + 5 + radius * 2
+            var talkWaitY = talkY + 13;
+            this.drawTalkWaitFx(m, talkWaitX, talkWaitY, radius, fill);
+          }
           m.globalAlpha = 1;
           m.restore();
         }
@@ -1353,6 +1415,8 @@
             ma / 2 - r.width / 2,
             1.1 * r.height * (na ? 1 - K / 300 : K / 300) - r.height
           ));
+
+        (!T && talkEnabled > 0.0) && talkLayer.draw(m);
         a != s && (a = s);
       };
       this.drawTalkWaitFx = function (b, a, e, d, v) {
@@ -1373,7 +1437,7 @@
         0 < K ? ((K -= b), 0 >= K && !na && (w = null)) : (K = 0);
         z && (n -= b);
         z && 0 >= K && na && 0 >= n && ((na = !1), (K = 300));
-        0 < ca && ((ca -= b / 500), 0 > ca && (ca = 0));
+        0 < talkBlink && ((talkBlink -= b / 500), 0 > talkBlink && (talkBlink = 0));
       };
       this.renderLeaderboard = function (b, a) {
         function e(a) {
@@ -1406,13 +1470,13 @@
         a.height = q;
         b.fillStyle = "#003a3a";
         b.globalAlpha = 0.3;
-        Eb(b, 6, 6, A - 12, q - 12, 15 * s);
+        drawRoundedRectangle(b, 6, 6, A - 12, q - 12, 15 * s);
         b.globalAlpha = 1;
         b.shadowColor = "#337777";
         b.shadowBlur = 6;
         b.fillStyle = "#337777";
         b.globalAlpha = 0.5;
-        Nc(b, 6, 6, A - 12, 32 * s, 15 * s);
+        drawTopRoundedRectangle(b, 6, 6, A - 12, 32 * s, 15 * s);
         b.globalAlpha = 1;
         b.font = u + f + "px " + w;
         b.textBaseline = "middle";
@@ -1503,11 +1567,115 @@
         x = a;
       };
       this.cantTalk = function () {
-        ca = 1;
+        talkBlink = 1;
       };
-      this.toggleTalkLayer = function () {};
-      this.hideTalkLayer = function () {};
-      this.fastHideTalkLayer = function () {};
+      this.toggleTalkLayer = function () {
+        talkLayer.visible = talkLayer.visible ? false : true;
+      };
+
+      this.hideTalkLayer = function () {
+        talkLayer.visible = false;
+      };
+
+      this.fastHideTalkLayer = function () {
+        talkLayer.fastHide();
+      };
+      (function () {
+        talkLayer = new TalkLayer();
+      })();
+    },
+    TalkLayer = function () {
+      var talkLayer = this;
+
+      var startX = 10;
+      var startY = 100;
+      var marginX = 10;
+      var labelWidth = 180;
+      var renderedElement;
+      this.visible = false;
+      var hiddenOffsetX = -labelWidth - marginX;
+      var hideValue = 1;
+
+      this.fastHide = function () {
+        hideValue = 1;
+        this.visible = false;
+      };
+
+      this.draw = function (context) {
+        if (this.visible) {
+          hideValue += (0.0 - hideValue) / 10.0;
+        } else {
+          hideValue += (1.0 - hideValue) / 10.0;
+        }
+        if (hideValue > 0.99) return;
+        context.translate(startX + hiddenOffsetX * hideValue, startY);
+        context.scale(s, s);
+
+        context.font = 'Bold ' + 15 + "px 'proxima-nova-1','proxima-nova-2', Arial";
+        context.fillStyle = 'rgba(0, 255, 255, 1.0)';
+        context.shadowBlur = 5;
+        context.shadowColor = 'rgba(0, 200, 200, 1.0)';
+        var baseY = 15;
+        if (B) {
+          if (B.talkStamina < 255) {
+            context.fillText("CANT TALK YET", 20, baseY);
+            var fill = B.talkStamina / 255;
+            R.drawTalkWaitFx(context, 20 + 140, 8, 4, fill);
+            context.globalAlpha = 0.5;
+          } else {
+            context.fillText("PRESS A NUMBER", 20, baseY);
+          }
+        }
+        context.shadowBlur = 0;
+        context.drawImage(renderedElement, 0, 0);
+        context.globalAlpha = 1.0;
+      }
+
+      this.preRender = function (contextLayer, renderedElement) {
+        renderedElement.width = labelWidth;
+        renderedElement.height = 10 * 31 + 23;
+
+        contextLayer.font = 'Bold ' + 15 + "px 'proxima-nova-1','proxima-nova-2', Arial";
+        contextLayer.fillStyle = 'rgba(0, 255, 255, 1.0)';
+        contextLayer.shadowBlur = 5;
+        contextLayer.shadowColor = 'rgba(0, 200, 200, 1.0)';
+
+        var baseY = 15;
+        baseY += 8;
+        for (var i = 0; i < 10; i++) {
+          contextLayer.globalAlpha = 0.3;
+          contextLayer.fillStyle = '#004444';
+
+          contextLayer.shadowBlur = 0;
+          drawRoundedRectangle(contextLayer, 0, baseY + i * 31, labelWidth, 30, 30);
+
+          contextLayer.globalAlpha = 1.0;
+          drawLeftRoundedRectangle(contextLayer, 0, baseY + i * 31, 35, 30, 30);
+
+
+          contextLayer.globalAlpha = 1.0;
+          contextLayer.fillStyle = 'rgba(0, 255, 255, 1.0)';
+          contextLayer.shadowBlur = 5;
+          contextLayer.shadowColor = 'rgba(0, 200, 200, 1.0)';
+
+          var offX = 5;
+          var index = (i + 1);
+          if (index == 10) index = 0;
+          contextLayer.fillText(index, marginX + offX, baseY + i * 31 + 5 + 15);
+
+          var text = Qc[i];
+          var width = contextLayer.measureText(text).width;
+          contextLayer.fillText(text, 35 + (labelWidth - 35) / 2.0 - width / 2.0, baseY + i * 31 + 5 + 15);
+        }
+        contextLayer.globalAlpha = 1.0;
+        contextLayer.shadowBlur = 0;
+      };
+
+      (function () {
+        renderedElement = document.createElement('canvas');
+        var ctx = renderedElement.getContext('2d');
+        talkLayer.preRender(ctx, renderedElement);
+      })();
     },
     Ub = function () {
       var a = this;
@@ -1598,8 +1766,10 @@
         va = 0,
         Ha = 0,
         Ia = 0,
-        ua = !1,
-        pa = 0;
+        talkText = '',
+        prevTalkID = 0,
+        talkID = 0,
+        balloonScale = 0;
       this.talkStamina = 0;
       var W = 1;
       this.processPoint = function (b) {
@@ -1707,8 +1877,15 @@
           L &&
           B == this &&
           ((Ia += a), 2e3 < Ia && ((ta = 1), (l.localStorage.speedUpTut = 1)));
-        pa -= (a / 1e3) * 20;
-        0 > pa && (pa = 0);
+        var incSpeed = (a / 1000.0) * 20.0;
+        if (talkID > 0) {
+          balloonScale += incSpeed;
+          var limit = (3.0 / 4.0) * (Math.PI);
+          if (balloonScale > limit) balloonScale = limit;
+        } else {
+          balloonScale -= incSpeed;
+          if (balloonScale < 0.0) balloonScale = 0.0;
+        }
       };
       this.calculateTimeAlive = function(minutes = false) {
         const timeElapsedMs = performance.now() - this.bornTime;
@@ -2140,18 +2317,18 @@
           d = b.measureText(e).width;
           b.fillText(e, -d / 2, 30);
           b.restore();
-          0 < pa &&
+          0 < balloonScale &&
             (b.save(),
             (b.globalAlpha = 1),
             b.translate(this.headPos.x, this.headPos.y),
-            (e = Math.sin(pa)),
+            (e = Math.sin(balloonScale)),
             (d = Math.sin(0.75 * Math.PI)),
             e > d && (e = d + 0.5 * (1 - d)),
             b.scale(e, e),
             (b.fillStyle = "rgba(0, 60, 60, 1.0)"),
             (b.font = "Bold 8px 'proxima-nova-1','proxima-nova-2', Arial"),
             (b.textBaseline = "hanging"),
-            (e = b.measureText("").width),
+            (e = b.measureText(talkText).width),
             (d = e / 2 + 13),
             (f = e + 8),
             b.beginPath(),
@@ -2160,9 +2337,9 @@
             b.lineTo(-13, -20),
             b.closePath(),
             b.fill(),
-            Eb(b, -f / 2 - d, -24.5, f, 13, 6),
+            drawRoundedRectangle(b, -f / 2 - d, -24.5, f, 13, 6),
             (b.fillStyle = "rgba(0, 255, 255, 1.0)"),
-            b.fillText("", -e / 2 - d, -20),
+            b.fillText(talkText, -e / 2 - d, -20),
             b.restore());
         }
       };
@@ -2257,7 +2434,11 @@
             (c += 2),
             Ha != va && B == this && L && (Ha = va))
           : (va = 0);
-        l & 64 && (c += 1);
+        l & 64
+          ? ((talkID = a.getUint8(c, !0)),
+            (c += 1),
+            prevTalkID != talkID && ((talkText = this.getTalkTextByTalkID(talkID)), (prevTalkID = talkID)))
+          : (talkID = 0);
         this.talkStamina = a.getUint8(c, !0);
         c += 1;
         m = (a.getUint8(c, !0) / 255) * 100;
@@ -3120,7 +3301,7 @@
         Sb = 0 == yb ? !1 : !0;
         sc = a.getFloat32(c, !0);
         c += 4;
-        a.getFloat32(c, !0);
+        talkEnabled = a.getFloat32(c, !0);
         oc = !0;
       };
       this.processMessage = function (e) {
