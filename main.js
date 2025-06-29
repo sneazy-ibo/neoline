@@ -1286,6 +1286,9 @@
         arah,
         plu,
         pluh,
+        wawa,
+        awah,
+        awawa,
         talkBlink = 0;
         prev_talkStamina = 0;
       this.draw = function (m) {
@@ -1391,6 +1394,11 @@
             (ka = new wa(fontSize * s, "#00FFFF", !1, "#00AAAA")),
               ka.setValue("TALK"),
               tata = ka.render();
+          if (!wawa || awawa != window.code|| $a)
+            (wawa = new wa(fontSize * s, "#00FFFF", !1, "#00AAAA")),
+              wawa.setValue("ROOM: " + window.code),
+              (awah = wawa.render()),
+              (awawa = window.code);
           if (!plu || plurrr != plu|| $a)
             (plu = new wa(fontSize * s, "#00FFFF", !1, "#00AAAA")),
               plu.setValue("PLAYERS: " + ob),
@@ -1409,8 +1417,9 @@
           m.drawImage(ja, 5, canvas.height / s - ja.height - ba.height - al.height - 5);
           m.drawImage(ba, 5, canvas.height / s - ja.height - al.height - 5);
           m.drawImage(al, 5, canvas.height / s - ja.height - 5);
-          m.drawImage(arah, canvas.width / s - pluh.width - 230, canvas.height / s - 5 - arah.height);
-          m.drawImage(pluh, canvas.width / s - pluh.width - 230, canvas.height / s - 5 - arah.height - pluh.height - 5);
+          m.drawImage(arah, canvas.width / s - pluh.width - 230, canvas.height / s - arah.height - 5);
+          m.drawImage(pluh, canvas.width / s - pluh.width - 230, canvas.height / s - arah.height - pluh.height - 5);
+          m.drawImage(awah, canvas.width / s - pluh.width - 230, canvas.height / s - arah.height - pluh.height - awah.height - 5);
           if (talkEnabled > 0.0) {
             var fill = B.talkStamina / 255;
             if (B.talkStamina == 255 && prev_talkStamina < 255) {
@@ -3283,6 +3292,20 @@
           d.onerror = n.onError;
         } else setTimeout(n.getServerAndConnect, 100);
       };
+      this.getRoomCode = function (ws, rooms) {
+        var ssl = ws.startsWith('wss://');
+        var urlNoProto = ws.slice(ssl ? 6 : 5);
+        var hp = urlNoProto.split('/')[0];
+        var parts = hp.split(':');
+        var host = parts[0];
+        var port = parseInt(parts[1], 10);
+
+        return rooms.find(function(r) {
+          var h = r.host.split(':')[0];
+          var expPort = (ssl ? 9080 : 8080) + parseInt(r.roomNumber);
+          return h === host && expPort === port;
+        })?.roomID || null;
+      };
       this.disconnect = function () {
         n.directed && (Ta() || (l.location.hash = ""), (n.directed = !1));
         n.roomID = 0;
@@ -3306,6 +3329,7 @@
         console.log("socket error");
       };
       this.hello = function () {
+        l.code = this.getRoomCode(l.ws, l.rooms);
         n.sendHello();
         n.ping();
         n.sentHello = !0;
