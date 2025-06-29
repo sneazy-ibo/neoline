@@ -526,15 +526,31 @@
       sa = !sa;
       W.resize();
   };
+  l.changeZoom = function(d, type) {
+    if(d.ctrlKey || d.metaKey) return;
+    var factor = d.shiftKey ? 1.5 : 1.1;
+    switch (type) {
+      case 'in':
+        l.viewRadius /= factor;
+        break; 
+      case 'out':
+        l.viewRadius *= factor;
+        break; 
+      case 'norm':
+        l.viewRadius = 1;
+        break; 
+    }
+    W.resize();
+    R.showTip('View radius: ' + l.viewRadius.toFixed(3), 2000);
+  };
   l.toggleMinimap = function() {
-      dada = !dada;
-      const who = dada === true ? 'you' : 'all';
-      R.showTip('Minimap: ' + who, 2000);
+    dada = !dada;
+    R.showTip('Minimap: ' + dada ? 'you' : 'all', 2000);
   };
   l.demogorogorogorogon = function() {
-      demo = (demo + 1) % 3;
-      const who = demo === 0 ? 'none' : demo === 1 ? 'you' : 'all';
-      R.showTip('Demogorgon: ' + who, 2000);
+    demo = (demo + 1) % 3;
+    const who = demo === 0 ? 'none' : demo === 1 ? 'you' : 'all';
+    R.showTip('Demogorgon: ' + who, 2000);
   };
   l.displayAchievements = function() {
     l.showAchievements = !l.showAchievements;
@@ -913,13 +929,14 @@
           case '+':
           case '*':
           case '=':
-            l.viewRadius /= d.shiftKey ? 1.5 : 1.1;
-            W.resize();
+            l.changeZoom(d, 'in');
             break;
           case '-':
           case '_':
-            l.viewRadius *= d.shiftKey ? 1.5 : 1.1;
-            W.resize();
+            l.changeZoom(d, 'out');
+            break;
+          case 'backspace':
+            l.changeZoom(d, 'norm');
             break;
           case 'g':
             l.toggleGraphics();
