@@ -310,6 +310,7 @@
     Qb,
     sb,
     Rb,
+    talkLayer,
     r,
     M,
     ra = 0,
@@ -353,13 +354,16 @@
       "LOL;EASY!;OOPS!;I DARE YOU!;GOTCHA!;RUN!;TEAM?;YES!;NO!;KILL THE KING!".split(
         ";"
       );
+  l.base = "https://raw.githubusercontent.com/sneazy-ibo/neoline/altair/";
   l.first = ib;
   l.second = jb;
   l.nicks = [];
   l.viewRadius = 1;
+  l.lastZoom = 1;
   l.drawServerPos = false;
   l.fixInward = true;
   l.lastTurnPoint = null;
+  l.showShake = true;
   l.showAchievements = true;
   !ta && 3 < Q && ((ta = 1), (l.localStorage.speedUpTut = ta));
   var $a = !1;
@@ -537,7 +541,12 @@
         l.viewRadius *= factor;
         break; 
       case 'norm':
-        l.viewRadius = 1;
+        if (l.viewRadius === 1 && l.lastZoom === 1) return;
+        else if(l.viewRadius === 1) l.viewRadius = l.lastZoom;
+        else {
+          l.lastZoom = l.viewRadius;
+          l.viewRadius = 1;
+        }
         break; 
     }
     W.resize();
@@ -545,7 +554,7 @@
   };
   l.toggleMinimap = function() {
     dada = !dada;
-    R.showTip('Minimap: ' + dada ? 'you' : 'all', 2000);
+    R.showTip('Minimap: ' + (dada ? 'you' : 'all'), 2000);
   };
   l.demogorogorogorogon = function() {
     demo = (demo + 1) % 3;
@@ -883,7 +892,7 @@
         this.keysImage.src = "images/arrows.png";
         this.keysImage.onload = function () {};
         this.boostImage = new Image();
-        this.boostImage.src = "images/close-to-boost-w.png";
+        this.boostImage.src = l.base + "assets/keybinds.png";
         this.boostImage.onload = function () {};
       };
       this.loadTintImage = function (a, c, g) {
@@ -926,13 +935,10 @@
       };
       a.keydown = function (d) {
         switch (d.key.toLowerCase()) {
-          case '+':
-          case '*':
-          case '=':
+          case '+': case '*': case '=':
             l.changeZoom(d, 'in');
             break;
-          case '-':
-          case '_':
+          case '-': case '_':
             l.changeZoom(d, 'out');
             break;
           case 'backspace':
@@ -1280,7 +1286,6 @@
         arah,
         plu,
         pluh,
-        talkLayer,
         talkBlink = 0;
         prev_talkStamina = 0;
       this.draw = function (m) {
@@ -3553,7 +3558,7 @@
         1 == Ba &&
           ((ta && !(0 < Oa)) || T
             ? 1 == ta && 0 < b && ((b -= (a / 1e3) * 3), 0 >= b && (b = 0))
-            : ((Oa -= a),
+            : ((Oa -= a / 10),
               0 > Oa && (Oa = 0),
               (b += (a / 1e3) * 3),
               1 < b && (b = 1)));
@@ -3600,7 +3605,7 @@
             (f.save(),
             (f.globalAlpha = b),
             f.scale(s, s),
-            f.translate((0.5 * ma) / s, (0.825 * Z) / s),
+            f.translate((0.5 * ma) / s, (0.785 * Z) / s),
             f.drawImage(
               t.boostImage,
               -t.boostImage.width / 2,
@@ -4936,10 +4941,8 @@
           zapking: [36e3, 1142.6530612244933],
         };
       this.load = function (c) {
-        const base =
-          "https://raw.githubusercontent.com/sneazy-ibo/neoline/altair/";
         this.sound = new Howl({
-          urls: ["sounds/out.ogg", "sounds/out.mp3"].map((u) => base + u),
+          urls: ["assets/out.ogg", "assets/out.mp3"].map((u) => l.base + u),
           sprite: g,
           onload: function () {
             a = !0;
