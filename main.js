@@ -1266,6 +1266,9 @@
         x = 0,
         E = 0,
         Fa = 0,
+        araara = 0,
+        plurrr = 0,
+        lalala = 0,
         u,
         X,
         ja,
@@ -1273,6 +1276,10 @@
         bo,
         al,
         ka,
+        ara,
+        arah,
+        plu,
+        pluh,
         talkLayer,
         talkBlink = 0;
         prev_talkStamina = 0;
@@ -1358,9 +1365,13 @@
         
         if (L && B) {
           var fontSize = sa ? 15 : 20;
-          bo = new wa(fontSize * s, "#00FFFF", !1, "#00AAAA");
-          bo.setValue("ALIVE: " + B.calculateTimeAlive());
-          al = bo.render();
+          var time = B.calculateTimeAlive();
+          if (time !== lalala) {
+            lalala = time;
+            bo = new wa(fontSize * s, "#00FFFF", !1, "#00AAAA");
+            bo.setValue("ALIVE: " + time);
+            al = bo.render();
+          }
           if (!u || E != Wa || $a)
             (u = new wa(fontSize * s, "#00FFFF", !1, "#00AAAA")),
               u.setValue("ZAPS: " + Wa),
@@ -1375,6 +1386,16 @@
             (ka = new wa(fontSize * s, "#00FFFF", !1, "#00AAAA")),
               ka.setValue("TALK"),
               tata = ka.render();
+          if (!plu || plurrr != plu|| $a)
+            (plu = new wa(fontSize * s, "#00FFFF", !1, "#00AAAA")),
+              plu.setValue("PLAYERS: " + ob),
+              (pluh = plu.render()),
+              (plurrr = plu);
+          if (!ara || araara != ara || $a)
+            (ara = new wa(fontSize * s, "#00FFFF", !1, "#00AAAA")),
+              ara.setValue("ARENA: " + Math.round(ia));
+              (arah = ara.render()),
+              (araara = ara);
           $a = !1;
           m.save();
           m.scale(s, s);
@@ -1383,7 +1404,8 @@
           m.drawImage(ja, 5, canvas.height / s - ja.height - ba.height - al.height - 5);
           m.drawImage(ba, 5, canvas.height / s - ja.height - al.height - 5);
           m.drawImage(al, 5, canvas.height / s - ja.height - 5);
-
+          m.drawImage(arah, canvas.width / s - pluh.width - 230, canvas.height / s - 5 - arah.height);
+          m.drawImage(pluh, canvas.width / s - pluh.width - 230, canvas.height / s - 5 - arah.height - pluh.height - 5);
           if (talkEnabled > 0.0) {
             var fill = B.talkStamina / 255;
             if (B.talkStamina == 255 && prev_talkStamina < 255) {
@@ -1476,7 +1498,7 @@
         0 == Va && ((u = "Bold "), (w = "Arial"));
         q += d + f + d + 12;
         g = 6 + d + f + d;
-        for (var E = 0, l = !1, r = 0; 5 > r; r++) {
+        for (var E = 0, l = !1, r = 0; m.length > r; r++) {
           var da = m[r];
           da && (V != da.id || l || (l = !0), e(da.nick.substring(0, 16)));
         }
@@ -1506,7 +1528,7 @@
         f = u + c + "px " + w;
         b.font = f;
         g += k;
-        for (r = 0; 5 > r; r++)
+        for (r = 0; m.length > r; r++)
           if ((da = m[r])) {
             var k = 0 == r && 0 < ra,
               Cc,
@@ -1919,12 +1941,11 @@
             return deltaTime.toFixed(1) + 's';
           }
         } else {
-          // Format: "02:35.42"
+          // Format: "02:35"
           const minutes = Math.floor(timeElapsedMs / 60000);
           const seconds = Math.floor((timeElapsedMs % 60000) / 1000);
-          const centiseconds = Math.floor((timeElapsedMs % 1000) / 10);
           
-          return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(centiseconds).padStart(2, '0')}`;
+          return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         }
       };
       this.drawCircle = function (b, a, e, d, v) {
